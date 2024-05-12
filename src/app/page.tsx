@@ -13,7 +13,7 @@ async function Images() {
       {images.length > 0 &&
         images.map((image) => (
           <div key={image.id} className="w-48 p-4">
-            <Link href={`/image/${image.id}`}>
+            <Link href={`/img/${image.id}`} passHref>
               <Image
                 src={image.url}
                 alt={image.name}
