@@ -11,22 +11,20 @@ async function Images() {
   return (
     <div className="flex flex-wrap gap-4 p-4">
       {images.length > 0 &&
-        [...images, ...images, ...images, ...images, ...images].map(
-          (image, i) => (
-            <div key={image.id + i} className="w-48 p-4">
-              <Link href={`/img/${image.id}`} passHref>
-                <Image
-                  src={image.url}
-                  alt={image.name}
-                  style={{ objectFit: "contain" }}
-                  width={480}
-                  height={480}
-                />
-                <p>{image.name}</p>
-              </Link>
-            </div>
-          ),
-        )}
+        images.map((image, i) => (
+          <div key={image.id + i} className="w-48 p-4">
+            <Link href={`/img/${image.id}`} passHref>
+              <Image
+                src={image.url}
+                alt={image.name}
+                style={{ objectFit: "contain" }}
+                width={480}
+                height={480}
+              />
+              <p>{image.name}</p>
+            </Link>
+          </div>
+        ))}
     </div>
   );
 }
