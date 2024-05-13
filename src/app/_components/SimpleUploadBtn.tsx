@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { usePostHog } from "posthog-js/react";
 import { toast } from "sonner";
 import { useUploadThing } from "~/utils/uploadthing";
 
@@ -66,31 +67,32 @@ function LoadingSpinnerSvg() {
 }
 export function SimpleUploadBtn() {
   const router = useRouter();
-  const { inputProps, isUploading } = useUploadThingsInputsProps(
-    "imageUploader",
-    {
-      onUploadBegin() {
-        toast(
-          <div className="flex items-center gap-2 text-white">
-            <LoadingSpinnerSvg />
-            <span className="text-lg">Uploading...</span>
-          </div>,
-          {
-            id: "upload-begin",
-            duration: 10000,
-          },
-        );
-      },
-      onClientUploadComplete() {
-        router.refresh();
-        toast.dismiss("upload-begin");
-        toast("Upload complete", {
-          id: "upload-complete",
-          duration: 3000,
-        });
-      },
+
+  const posthog = usePostHog();
+
+  const { inputProps } = useUploadThingsInputsProps("imageUploader", {
+    onUploadBegin() {
+      posthog.capture("upload-begins");
+      toast(
+        <div className="flex items-center gap-2 text-white">
+          <LoadingSpinnerSvg />
+          <span className="text-lg">Uploading...</span>
+        </div>,
+        {
+          id: "upload-begin",
+          duration: 10000,
+        },
+      );
     },
-  );
+    onClientUploadComplete() {
+      router.refresh();
+      toast.dismiss("upload-begin");
+      toast("Upload complete", {
+        id: "upload-complete",
+        duration: 3000,
+      });
+    },
+  });
   return (
     <div>
       <label htmlFor="upload-button" className="cursor-pointer">
