@@ -92,6 +92,11 @@ export function SimpleUploadBtn() {
         duration: 3000,
       });
     },
+    onUploadError(error) {
+      posthog.capture("upload-error", { error });
+      toast.dismiss("upload-begin");
+      toast.error(error.message);
+    },
   });
   return (
     <div>
